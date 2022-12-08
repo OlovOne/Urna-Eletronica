@@ -1,24 +1,25 @@
 package src;
 
 import jaco.mp3.player.MP3Player;
+
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.net.URL;
-
 import javax.swing.*;
 
 public class Gui {
 	private File biriri = new File("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\biririri.mp3");
 	private File pi = new File("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\Pi.mp3");
+	private ImageIcon iconLogo = new ImageIcon("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\Logo.png");
 	private ImageIcon iconA = new ImageIcon("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\jungkook.jpg");
 	private final int TAMANHO = 40;
 	private final int X_COLUNA1 =  500;
 	private final int X_COLUNA2 =  560;
 	private final int X_COLUNA3 =  620;
-	private final int Y_COLUNA1 =  80;
-	private final int Y_COLUNA2 =  140;
-	private final int Y_COLUNA3 =  200;
+	private final int Y_COLUNA1 =  90;
+	private final int Y_COLUNA2 =  150;
+	private final int Y_COLUNA3 =  210;
 	private JButton um = new JButton("1");
 	private JButton dois = new JButton("2");
 	private JButton tres = new JButton("3");
@@ -33,20 +34,30 @@ public class Gui {
 	private JButton corrigir = new JButton("Corrigir");
 	private JButton confirma = new JButton("Confirma");
 	private JLabel label = new JLabel();
+	private JLabel logo = new JLabel();
+	private JLabel background = new JLabel();
+	private JTextField numero = new JTextField();
 	private JFrame frame;
-	
+			
 	public Gui() {
 		frame = new JFrame("Urna");
 		frame.setSize(800,500);
 		frame.setLocationRelativeTo(null);
 		frame.setLayout(null);
-		configLabel();
+		addConfigText();
+		addConfigLabel();
 		events();
 		addButtons();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-	public void setBounds() {
+	public void addConfigText() {
+		numero.setBounds(250, 80, 20, 20);
+		numero.setEditable(false);
+		numero.setBackground(Color.WHITE);
+		frame.add(numero);
+	}
+	public void setConfig() {
 		um.setBounds(X_COLUNA1, Y_COLUNA1, TAMANHO, TAMANHO);
 		dois.setBounds(X_COLUNA2, Y_COLUNA1, TAMANHO, TAMANHO);
 		tres.setBounds(X_COLUNA3, Y_COLUNA1, TAMANHO, TAMANHO);
@@ -60,14 +71,44 @@ public class Gui {
 		branco.setBounds(X_COLUNA1-50, Y_COLUNA3+160, TAMANHO*2, TAMANHO);
 		corrigir.setBounds(X_COLUNA1+40,Y_COLUNA3+160, TAMANHO*2, TAMANHO);
 		confirma.setBounds(X_COLUNA3+10, Y_COLUNA3+140, TAMANHO*2+20, TAMANHO+20);
+		confirma.setBackground(Color.GREEN);
+		branco.setBackground(Color.WHITE);
+		corrigir.setBackground(Color.orange);
+		um.setBackground(Color.BLACK);
+		dois.setBackground(Color.BLACK);
+		tres.setBackground(Color.BLACK);
+		quatro.setBackground(Color.BLACK);
+		cinco.setBackground(Color.BLACK);
+		seis.setBackground(Color.BLACK);
+		sete.setBackground(Color.BLACK);
+		oito.setBackground(Color.BLACK);
+		nove.setBackground(Color.BLACK);
+		zero.setBackground(Color.BLACK);
+		um.setForeground(Color.WHITE);
+		dois.setForeground(Color.WHITE);
+		tres.setForeground(Color.WHITE);
+		quatro.setForeground(Color.WHITE);
+		cinco.setForeground(Color.WHITE);
+		seis.setForeground(Color.WHITE);
+		sete.setForeground(Color.WHITE);
+		oito.setForeground(Color.WHITE);
+		nove.setForeground(Color.WHITE);
+		zero.setForeground(Color.WHITE);
 	}
-	public void configLabel() {
+	public void addConfigLabel() {
 		label.setBounds(25,50,300,300);
 		label.setIcon(iconA);
+		logo.setLocation(X_COLUNA1-45, 0);
+		logo.setSize(300,75);
+		logo.setIcon(iconLogo);
+		background.setBounds(X_COLUNA1-65,400,10,10);
+		background.setBackground(Color.PINK);
+		frame.add(background);
+		frame.add(logo);
 		frame.add(label);
 	}
 	public void addButtons() {
-		setBounds();
+		setConfig();
 		frame.add(um);
 		frame.add(dois);
 		frame.add(tres);
@@ -86,51 +127,61 @@ public class Gui {
 		um.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("1");
 			}
 		});
 		dois.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("2");
 			}
 		});
 		tres.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("3");
 			}
 		});
 		quatro.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("4");
 			}
 		});
 		cinco.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("5");
 			}
 		});
 		seis.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("6");
 			}
 		});
 		sete.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("7");
 			}
 		});
 		oito.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("8");
 			}
 		});
 		nove.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("9");
 			}
 		});
 		zero.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
+				numero.setText("0");
 			}
 		});
 		confirma.addMouseListener(new MouseAdapter() {
