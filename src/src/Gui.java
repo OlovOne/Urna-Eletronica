@@ -3,12 +3,15 @@ package src;
 import jaco.mp3.player.MP3Player;
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.*;
 
 public class Gui {
+	private DB db = new DB();
 	private File biriri = new File("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\biririri.mp3");
 	private File pi = new File("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\Pi.mp3");
 	private ImageIcon iconLogo = new ImageIcon("C:\\Users\\PYTER\\Documents\\Projete java\\Urna-Eletronica\\src\\src\\Logo.png");
@@ -154,66 +157,83 @@ public class Gui {
 		um.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("1");
+				verificNull("1");
 			}
 		});
 		dois.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("2");
+				verificNull("2");
 			}
 		});
 		tres.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("3");
+				verificNull("3");
 			}
 		});
 		quatro.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("4");
+				verificNull("4");
 			}
 		});
 		cinco.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("5");
+				verificNull("5");
 			}
 		});
 		seis.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("6");
+				verificNull("6");
 			}
 		});
 		sete.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("7");
+				verificNull("7");
 			}
 		});
 		oito.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("8");
+				verificNull("8");
 			}
 		});
 		nove.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("9");
+				verificNull("9");
 			}
 		});
 		zero.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				piPlayer();
-				numero.setText("0");
+				verificNull("0");
+			}
+		});
+		corrigir.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				piPlayer();
+				numero.setText("");
+				numero1.setText("");
+				numero2.setText("");
+				numero3.setText("");
+				numero4.setText("");
+			}
+		});
+		branco.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				piPlayer();
 			}
 		});
 		confirma.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				biririPlayer();
+				String num = numero.getText()+numero1.getText()+numero2.getText()+numero3.getText()+numero4.getText();
+				db.insertVotos(db.fromVotosCandidato(Integer.parseInt(num)+1), Integer.parseInt(num));
 			}
 		});
 	}
@@ -225,4 +245,309 @@ public class Gui {
 		MP3Player biririPlayer = new MP3Player(biriri);
 		biririPlayer.play();
 	}
+	public void verificNull(String num) {
+		if(numero.getText().equals("")) {
+			numero.setText(num);
+		}else if(numero1.getText().equals("")) {
+			numero1.setText(num);
+		}else if(numero2.getText().equals("")) {
+			numero2.setText(num);
+		}else if(numero3.getText().equals("")) {
+			numero3.setText(num);
+		}else if(numero4.getText().equals("")) {
+			numero4.setText(num);
+		}
+	}
+	private void candidatos() {
+		db.ca
+	}
+	private class GUICadastra {
+	    private final int X = 35;
+	    private final int Y = 35;
+	    private final int WIDTH = 50;
+	    private final int HEIGHT = 20;
+		private JFrame frameCadastro;
+		private JButton cadastra = new JButton("Cadastra");
+		private JButton cancelar = new JButton("Cancelar");
+		private JTextField name = new JTextField();
+		private JTextField partido = new JTextField();
+		private JTextField pathImage = new JTextField();
+		private JTextField numero = new JTextField();
+		private JLabel nameL = new JLabel("Nome");
+		private JLabel partidoL = new JLabel("Partido");
+		private JLabel pathImageL = new JLabel("Caminho da imagem");
+		private JLabel numeroL = new JLabel("Numero");
+		private JLabel imagem = new JLabel();
+		private DB db = new DB();
+		private String path;
+		private ImageIcon iconA;
+		
+		public GUICadastra() {
+			frameCadastro = new JFrame("Cadastro de candidato");
+			frameCadastro.setSize(500,500);
+			frameCadastro.setLocationRelativeTo(null);
+			frameCadastro.setLayout(null);
+			addConfigButton();
+			addConfigTextField();
+			addConfigLabel();
+			frameCadastro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frameCadastro.setVisible(true);
+		}
+		private void addConfigButton() {
+			cadastra.setBounds(350,400,100,40);
+			cancelar.setBounds(35, 400, 100,40);
+			cadastra.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					if(name.getText().equals("")) {
+						name.grabFocus();
+					}
+					if(numero.getText().equals("")) {
+						numero.grabFocus();
+					}
+					if(pathImage.getText().equals("")) {
+						pathImage.grabFocus();
+					}
+					if(partido.getText().equals("")) {
+						partido.grabFocus();	
+					}else {
+						String nome = name.getText();
+						int num = Integer.parseInt(numero.getText());
+						String image = pathImage.getText();
+						String part = partido.getText();
+						db.add(num, nome, image, part);
+					}
+				}
+			});
+			cancelar.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					frameCadastro.dispose();
+				}
+			});
+			frameCadastro.add(cadastra);
+			frameCadastro.add(cancelar);
+		}
+		private void addConfigTextField() {
+			name.setBounds(X, Y, WIDTH*4, HEIGHT);
+			partido.setBounds(X, Y*3,  WIDTH*4, HEIGHT);
+			pathImage.setBounds(X, Y*5,  WIDTH*4, HEIGHT);
+			numero.setBounds(X, Y*7,  WIDTH, HEIGHT);
+			name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			frameCadastro.add(numero);
+			frameCadastro.add(pathImage);
+			frameCadastro.add(partido);
+			frameCadastro.add(name);
+			pathImage.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						path = pathImage.getText();
+						iconA = new ImageIcon(path);
+						addConfigImage();
+					}
+				}
+			});
+		}
+		private void addConfigLabel() {
+			nameL.setBounds(X, Y-20, WIDTH+20, HEIGHT);
+			partidoL.setBounds(X, Y*3-20, WIDTH+20, HEIGHT);
+			pathImageL.setBounds(X, Y*5-20, WIDTH*2+20, HEIGHT);
+			numeroL.setBounds(X, Y*7-20, WIDTH+20, HEIGHT);
+			frameCadastro.add(numeroL);
+			frameCadastro.add(pathImageL);
+			frameCadastro.add(partidoL);
+			frameCadastro.add(nameL);
+		}
+		
+		private void addConfigImage() {
+			imagem.setBounds(280, 35, 170, 250);
+			imagem.setIcon(iconA);
+			frameCadastro.add(imagem);
+		}
+}
+	public class GUIMenu {
+		private final int X = 130;
+		private final int Y = 100;
+		private final int WIDTH = 130;
+		private final int HEIGHT = 30;
+		JFrame frameMenu;
+		JButton cadastro = new JButton("Cadastro");
+		JButton edit = new JButton("Editar cadastro");
+		JButton delete = new JButton("Deletar cadastro");
+		JButton init = new JButton("Iniciar votação");
+
+		
+		public GUIMenu() {
+			frameMenu = new JFrame("Menu");
+			frameMenu.setSize(400,400);
+			frameMenu.setIconImage(null);
+			frameMenu.setLocationRelativeTo(null);
+			frameMenu.setLayout(null);
+			addConfigButton();
+			frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frameMenu.setVisible(true);
+		}
+		public void addConfigButton() {
+			cadastro.setBounds(X, Y, WIDTH, HEIGHT);
+			edit.setBounds(X, Y+50, WIDTH, HEIGHT);
+			delete.setBounds(X, Y*2, WIDTH, HEIGHT);
+			init.setBounds(X, Y*2+50, WIDTH, HEIGHT);
+			frameMenu.add(delete);
+			frameMenu.add(init);
+			frameMenu.add(edit);
+			frameMenu.add(cadastro);
+			cadastro.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+			});
+			edit.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+			});
+			delete.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+			});
+			init.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+			});
+		}
+	}
+	public class GUIAlterar {
+		 private final int X = 35;
+		    private final int Y = 35;
+		    private final int WIDTH = 50;
+		    private final int HEIGHT = 20;
+			private JFrame frameCadastro;
+			private JButton cadastra = new JButton("Cadastra");
+			private JButton cancelar = new JButton("Cancelar");
+			private JTextField name = new JTextField();
+			private JTextField partido = new JTextField();
+			private JTextField pathImage = new JTextField();
+			private JTextField numero = new JTextField();
+			private JTextField numeroOld = new JTextField();
+			private JLabel nameL = new JLabel("Novo Nome");
+			private JLabel partidoL = new JLabel("Novo Partido");
+			private JLabel pathImageL = new JLabel("Novo Caminho de imagem");
+			private JLabel numeroL = new JLabel("Novo Numero");
+			private JLabel numeroLOld = new JLabel("Antigo Numero");
+			private JLabel imagem = new JLabel();
+			private DB db = new DB();
+			private String path;
+			private ImageIcon iconA;
+			
+			public GUIAlterar() {
+				frameCadastro = new JFrame("Cadastro de candidato");
+				frameCadastro.setSize(500,500);
+				frameCadastro.setLocationRelativeTo(null);
+				frameCadastro.setLayout(null);
+				addConfigButton();
+				addConfigTextField();
+				addConfigLabel();
+				frameCadastro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frameCadastro.setVisible(true);
+			}
+			private void addConfigButton() {
+				cadastra.setBounds(350,400,100,40);
+				cancelar.setBounds(35, 400, 100,40);
+				cadastra.addMouseListener(new MouseAdapter() {
+					public void mouseReleased(MouseEvent e) {
+						if(name.getText().equals("")) {
+							name.grabFocus();
+						}
+						if(numero.getText().equals("")) {
+							numero.grabFocus();
+						}
+						if(pathImage.getText().equals("")) {
+							pathImage.grabFocus();
+						}
+						if(partido.getText().equals("")) {
+							partido.grabFocus();	
+						}
+						if(numeroOld.getText().equals("")){
+							numeroOld.grabFocus();
+						}
+						else{
+							String nome = name.getText();
+							int num = Integer.parseInt(numero.getText());
+							String image = pathImage.getText();
+							String part = partido.getText();
+							int numOld = Integer.parseInt(numeroOld.getText());
+							db.editCandidato(numOld, num, nome, part, image);			
+							}
+					}
+				});
+				cancelar.addMouseListener(new MouseAdapter() {
+					public void mouseReleased(MouseEvent e) {
+						frameCadastro.dispose();
+					}
+				});
+				frameCadastro.add(cadastra);
+				frameCadastro.add(cancelar);
+			}
+			private void addConfigTextField() {
+				name.setBounds(X, Y, WIDTH*4, HEIGHT);
+				partido.setBounds(X, Y*3,  WIDTH*4, HEIGHT);
+				pathImage.setBounds(X, Y*5,  WIDTH*4, HEIGHT);
+				numero.setBounds(X, Y*7,  WIDTH*2, HEIGHT);
+				numeroOld.setBounds(X,Y*9,WIDTH*2,HEIGHT);
+				numeroOld.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				frameCadastro.add(numeroOld);
+				frameCadastro.add(numero);
+				frameCadastro.add(pathImage);
+				frameCadastro.add(partido);
+				frameCadastro.add(name);
+				pathImage.addKeyListener(new KeyAdapter() {
+					public void keyReleased(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+							path = pathImage.getText();
+							iconA = new ImageIcon(path);
+							addConfigImage();
+						}
+					}
+				});
+			}
+			private void addConfigLabel() {
+				nameL.setBounds(X, Y-20, WIDTH+20, HEIGHT);
+				partidoL.setBounds(X, Y*3-20, WIDTH*2+20, HEIGHT);
+				pathImageL.setBounds(X, Y*5-20, WIDTH*2+60, HEIGHT);
+				numeroL.setBounds(X, Y*7-20, WIDTH+40, HEIGHT);
+				numeroLOld.setBounds(X, Y*9-20, WIDTH+40, HEIGHT);
+				frameCadastro.add(numeroLOld);
+				frameCadastro.add(numeroL);
+				frameCadastro.add(pathImageL);
+				frameCadastro.add(partidoL);
+				frameCadastro.add(nameL);
+			}
+			
+			private void addConfigImage() {
+				imagem.setBounds(280, 35, 170, 250);
+				imagem.setIcon(iconA);
+				frameCadastro.add(imagem);
+			}
+			public void delete(int numeroAux) {
+				db.deleteCandidato(numeroAux);
+			}
+	}
+	public class GUIDelete {
+		public GUIDelete(){
+			DB db = new DB();
+			String nome;
+			nome = JOptionPane.showInputDialog("Digite seu nome:");
+			if(nome != null) {
+				db.deleteCandidato(Integer.parseInt(nome));
+			}
+		}
+	}
+
 }

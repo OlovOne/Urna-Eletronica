@@ -43,14 +43,15 @@ public class DB {
 			System.out.print("Falha ao ler dados do Data base"+e.getMessage()+e.getErrorCode());
 		}
  	}
- 	public void fromVotosCandidato(int num)  {
+ 	public int fromVotosCandidato(int num)  {
  		db();
  		try {
 			resultSet = statement.executeQuery("SELECT votos FROM candidato WHERE num="+num);
-			System.out.print(resultSet.getInt("votos"));
+			return resultSet.getInt("votos");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return 0;
  	}
  	public void insertVotos(int votos,int numero) {
  		db();
@@ -77,5 +78,15 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+ 	}
+ 	public String fromCandidato(int num) {
+ 		db();
+ 		try {
+			resultSet = statement.executeQuery("SELECT num,name,partido,image FROM candidato WHERE num="+num);
+			return resultSet.getString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+ 		return "";
  	}
 }
