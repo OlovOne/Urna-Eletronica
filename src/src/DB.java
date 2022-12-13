@@ -31,7 +31,7 @@ public class DB {
  					+pathImage+"\'"+","+"\'"+partido+"\'"+")";
  			statement.executeUpdate(insert);
 		} catch (SQLException e) {
-			System.out.print("Falha ao incrementar dado ao Data base"+e.getMessage()+e.getErrorCode());
+			System.out.print("Falha ao cadastra candidato"+e.getMessage()+e.getErrorCode());
 		}
  	}
  	public void fromVotosALL() {

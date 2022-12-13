@@ -35,8 +35,11 @@ public class Gui {
 	private JButton confirma = new JButton("Confirma");
 	private JLabel label = new JLabel();
 	private JLabel logo = new JLabel();
-	private JLabel background = new JLabel();
 	private JTextField numero = new JTextField();
+	private JTextField numero1 = new JTextField();
+	private JTextField numero2 = new JTextField();
+	private JTextField numero3 = new JTextField();
+	private JTextField numero4 = new JTextField();
 	private JFrame frame;
 			
 	public Gui() {
@@ -51,11 +54,38 @@ public class Gui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
+	
 	public void addConfigText() {
 		numero.setBounds(250, 80, 20, 20);
+		numero1.setBounds(270, 80, 20, 20);
+		numero2.setBounds(290, 80, 20, 20);
+		numero3.setBounds(310, 80, 20, 20);
+		numero4.setBounds(330, 80, 20, 20);
+		numero.setHorizontalAlignment(JTextField.CENTER);
+		numero1.setHorizontalAlignment(JTextField.CENTER);
+		numero2.setHorizontalAlignment(JTextField.CENTER);
+		numero3.setHorizontalAlignment(JTextField.CENTER);
+		numero4.setHorizontalAlignment(JTextField.CENTER);
+		numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		numero.setEditable(false);
 		numero.setBackground(Color.WHITE);
 		frame.add(numero);
+		numero1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		numero1.setEditable(false);
+		numero1.setBackground(Color.WHITE);
+		frame.add(numero1);
+		numero2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		numero2.setEditable(false);
+		numero2.setBackground(Color.WHITE);
+		frame.add(numero2);
+		numero3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		numero3.setEditable(false);
+		numero3.setBackground(Color.WHITE);
+		frame.add(numero3);
+		numero4.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		numero4.setEditable(false);
+		numero4.setBackground(Color.WHITE); 
+		frame.add(numero4);
 	}
 	public void setConfig() {
 		um.setBounds(X_COLUNA1, Y_COLUNA1, TAMANHO, TAMANHO);
@@ -101,9 +131,6 @@ public class Gui {
 		logo.setLocation(X_COLUNA1-45, 0);
 		logo.setSize(300,75);
 		logo.setIcon(iconLogo);
-		background.setBounds(X_COLUNA1-65,400,10,10);
-		background.setBackground(Color.PINK);
-		frame.add(background);
 		frame.add(logo);
 		frame.add(label);
 	}
