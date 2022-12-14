@@ -5,6 +5,7 @@ public class DB {
  private Connection connection;
  private Statement statement;
  private ResultSet resultSet;
+ 
  	public void db(){
  		try {
  			connection = DriverManager.getConnection(pathDB);
@@ -34,6 +35,18 @@ public class DB {
 			System.out.print("Falha ao cadastra candidato"+e.getMessage()+e.getErrorCode());
 		}
  	}
+ 	public void fromVotosAlone() {
+ 		db();
+        try {
+        	resultSet = statement.executeQuery("SELECT num,votos FROM candidato");
+			
+			while(resultSet.next()) {
+				
+			}
+		} catch (SQLException e) {
+			System.out.print("Falha ao ler dados do Data base"+e.getMessage()+e.getErrorCode());
+		}
+ 	}
  	public void fromVotosALL() {
  		db();
         try {
@@ -53,7 +66,16 @@ public class DB {
 		}
 		return 0;
  	}
- 	public void insertVotos(int votos,int numero) {
+ 	public int getVotos(int numero) {
+ 		db();
+ 		try {
+ 			String getVotos =  "SELECT votos FROM candidato";
+ 			return statement.executeUpdate(getVotos);
+		} catch (SQLException e) {
+		}
+ 		return 0;
+ 	}
+ 	public void setVotos(int votos,int numero) {
  		db();
  		try {
  			String update = "UPDATE candidato SET votos= "+votos+" WHERE num = "+numero;
@@ -82,8 +104,8 @@ public class DB {
  	public String fromCandidato(int num) {
  		db();
  		try {
-			resultSet = statement.executeQuery("SELECT num,name,partido,image FROM candidato WHERE num="+num);
-			return resultSet.getString();
+			resultSet = statement.executeQuery("SELECT * FROM candidato WHERE num="+num);
+			//return resultSet.getString();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
