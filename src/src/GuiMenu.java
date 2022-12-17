@@ -14,7 +14,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import jaco.mp3.player.MP3Player;
@@ -29,12 +28,14 @@ public class GuiMenu {
 	JButton edit = new JButton("Editar cadastro");
 	JButton delete = new JButton("Deletar cadastro");
 	JButton init = new JButton("Iniciar votação");
+	DB db = new DB();
 
 
 	public GuiMenu() {
 		frameMenu = new JFrame("Menu");
 		frameMenu.setSize(400,400);
 		frameMenu.setIconImage(null);
+		db.creatTable();
 		frameMenu.setLocationRelativeTo(null);
 		frameMenu.setLayout(null);
 		addConfigButton();
@@ -68,7 +69,7 @@ public class GuiMenu {
 			public void mouseReleased(MouseEvent e) {
 				GuiDelete delete = new GuiDelete();
 				frameMenu.setVisible(false);
-				//delete.getWindoClose();
+				delete.getWindoClose();
 			}
 		});
 		init.addMouseListener(new MouseAdapter() {
@@ -129,8 +130,8 @@ public class GuiMenu {
 		public void getWindoClose() {
 			frame.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
-					frame.setVisible(true);
-					}
+					frameMenu.setVisible(true);
+				}
 			});
 		}
 
@@ -306,16 +307,14 @@ public class GuiMenu {
 			confirma.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					biririPlayer();
-					String num = numero.getText()+numero1.getText()+numero2.getText()+numero3.getText()+numero4.getText();
 					db.setVotos(db.getVotos(getNumber()+1), getNumber());
 				}
 			});
 		}
-		
+
 		public void buttonClicked(String num) {
 			piPlayer();
 			verificNull(num);
-			
 		}
 		public int getNumber() {
 			String number = numero.getText() + numero1.getText() + numero2.getText() + numero3.getText() + numero4.getText();
@@ -343,262 +342,301 @@ public class GuiMenu {
 			}
 		}
 	}
-	
-		public class GuiCadastrar {
-			private final int X = 35;
-			private final int Y = 35;
-			private final int WIDTH = 50;
-			private final int HEIGHT = 20;
-			private JFrame frameCadastro;
-			private JButton cadastra = new JButton("Cadastra");
-			private JButton cancelar = new JButton("Cancelar");
-			private JTextField name = new JTextField();
-			private JTextField partido = new JTextField();
-			private JTextField pathImage = new JTextField();
-			private JTextField numero = new JTextField();
-			private JLabel nameL = new JLabel("Nome");
-			private JLabel partidoL = new JLabel("Partido");
-			private JLabel pathImageL = new JLabel("Caminho da imagem");
-			private JLabel numeroL = new JLabel("Numero");
-			private JLabel imagem = new JLabel();
-			private DB db = new DB();
-			private String path;
-			private ImageIcon iconA;
 
-			public GuiCadastrar() {
-				frameCadastro = new JFrame("Cadastro de candidato");
-				frameCadastro.setSize(500,500);
-				frameCadastro.setLocationRelativeTo(null);
-				frameCadastro.setLayout(null);
-				addConfigButton();
-				addConfigTextField();
-				addConfigLabel();
-				frameCadastro.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-				frameCadastro.setVisible(true);
-			}
-			public void getWindoClose() {
-				frameCadastro.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent e) {
-						frameMenu.setVisible(true);
-						}
-				});
-			}
-			private void addConfigButton() {
-				cadastra.setBounds(350,400,100,40);
-				cancelar.setBounds(35, 400, 100,40);
-				cadastra.addMouseListener(new MouseAdapter() {
-					public void mouseReleased(MouseEvent e) {
-						if(name.getText().equals("")) {
-							name.grabFocus();
-						}
-						if(numero.getText().equals("")) {
-							numero.grabFocus();
-						}
-						if(pathImage.getText().equals("")) {
-							pathImage.grabFocus();
-						}
-						if(partido.getText().equals("")) {
-							partido.grabFocus();	
-						}else {
-							String nome = name.getText();
-							int num = Integer.parseInt(numero.getText());
-							String image = pathImage.getText();
-							String part = partido.getText();
-							db.add(num, nome, image, part);
-						}
-					}
-				});
-				cancelar.addMouseListener(new MouseAdapter() {
-					public void mouseReleased(MouseEvent e) {
-						frameCadastro.dispose();
-					}
-				});
-				frameCadastro.add(cadastra);
-				frameCadastro.add(cancelar);
-			}
-			private void addConfigTextField() {
-				name.setBounds(X, Y, WIDTH*4, HEIGHT);
-				partido.setBounds(X, Y*3,  WIDTH*4, HEIGHT);
-				pathImage.setBounds(X, Y*5,  WIDTH*4, HEIGHT);
-				numero.setBounds(X, Y*7,  WIDTH, HEIGHT);
-				name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				frameCadastro.add(numero);
-				frameCadastro.add(pathImage);
-				frameCadastro.add(partido);
-				frameCadastro.add(name);
-				pathImage.addKeyListener(new KeyAdapter() {
-					public void keyReleased(KeyEvent e) {
-						if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-							path = pathImage.getText();
-							iconA = new ImageIcon(path);
-							addConfigImage();
-						}
-					}
-				});
-			}
-			private void addConfigLabel() {
-				nameL.setBounds(X, Y-20, WIDTH+20, HEIGHT);
-				partidoL.setBounds(X, Y*3-20, WIDTH+20, HEIGHT);
-				pathImageL.setBounds(X, Y*5-20, WIDTH*2+20, HEIGHT);
-				numeroL.setBounds(X, Y*7-20, WIDTH+20, HEIGHT);
-				frameCadastro.add(numeroL);
-				frameCadastro.add(pathImageL);
-				frameCadastro.add(partidoL);
-				frameCadastro.add(nameL);
-			}
+	public class GuiCadastrar {
+		private final int X = 35;
+		private final int Y = 35;
+		private final int WIDTH = 50;
+		private final int HEIGHT = 20;
+		private JFrame frameCadastro;
+		private JButton cadastra = new JButton("Cadastra");
+		private JButton cancelar = new JButton("Cancelar");
+		private JTextField name = new JTextField();
+		private JTextField partido = new JTextField();
+		private JTextField pathImage = new JTextField();
+		private JTextField numero = new JTextField();
+		private JLabel nameL = new JLabel("Nome");
+		private JLabel partidoL = new JLabel("Partido");
+		private JLabel pathImageL = new JLabel("Caminho da imagem");
+		private JLabel numeroL = new JLabel("Numero");
+		private JLabel imagem = new JLabel();
+		private DB db = new DB();
+		private String path;
+		private ImageIcon iconA;
 
-			private void addConfigImage() {
-				imagem.setBounds(280, 35, 170, 250);
-				imagem.setIcon(iconA);
-				frameCadastro.add(imagem);
-			}
+		public GuiCadastrar() {
+			frameCadastro = new JFrame("Cadastro de candidato");
+			frameCadastro.setSize(500,500);
+			frameCadastro.setLocationRelativeTo(null);
+			frameCadastro.setLayout(null);
+			addConfigButton();
+			addConfigTextField();
+			addConfigLabel();
+			frameCadastro.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			frameCadastro.setVisible(true);
 		}
-		public class GuiAlterar {
-			private final int X = 35;
-			private final int Y = 35;
-			private final int WIDTH = 50;
-			private final int HEIGHT = 20;
-			private JFrame frameCadastro;
-			private JButton cadastra = new JButton("Cadastra");
-			private JButton cancelar = new JButton("Cancelar");
-			private JTextField name = new JTextField();
-			private JTextField partido = new JTextField();
-			private JTextField pathImage = new JTextField();
-			private JTextField numero = new JTextField();
-			private JTextField numeroOld = new JTextField();
-			private JLabel nameL = new JLabel("Novo Nome");
-			private JLabel partidoL = new JLabel("Novo Partido");
-			private JLabel pathImageL = new JLabel("Novo Caminho de imagem");
-			private JLabel numeroL = new JLabel("Novo Numero");
-			private JLabel numeroLOld = new JLabel("Antigo Numero");
-			private JLabel imagem = new JLabel();
-			private DB db = new DB();
-			private String path;
-			private ImageIcon iconA;
-
-			public GuiAlterar() {
-				frameCadastro = new JFrame("Cadastro de candidato");
-				frameCadastro.setSize(500,500);
-				frameCadastro.setLocationRelativeTo(null);
-				frameCadastro.setLayout(null);
-				addConfigButton();
-				addConfigTextField();
-				addConfigLabel();
-				frameCadastro.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-				frameCadastro.setVisible(true);
-			}
-			public void getWindoClose() {
-				frameCadastro.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent e) {
-						frameCadastro.setVisible(true);
-						}
-				});
-			}
-			private void addConfigButton() {
-				cadastra.setBounds(350,400,100,40);
-				cancelar.setBounds(35, 400, 100,40);
-				cadastra.addMouseListener(new MouseAdapter() {
-					public void mouseReleased(MouseEvent e) {
-						if(name.getText().equals("")) {
-							name.grabFocus();
-						}
-						if(numero.getText().equals("")) {
-							numero.grabFocus();
-						}
-						if(pathImage.getText().equals("")) {
-							pathImage.grabFocus();
-						}
-						if(partido.getText().equals("")) {
-							partido.grabFocus();	
-						}
-						if(numeroOld.getText().equals("")){
-							numeroOld.grabFocus();
-						}
-						else{
-							String nome = name.getText();
-							int num = Integer.parseInt(numero.getText());
-							String image = pathImage.getText();
-							String part = partido.getText();
-							int numOld = Integer.parseInt(numeroOld.getText());
-							db.editCandidato(numOld, num, nome, part, image);			
-						}
-					}
-				});
-				cancelar.addMouseListener(new MouseAdapter() {
-					public void mouseReleased(MouseEvent e) {
-						frameCadastro.dispose();
-					}
-				});
-				frameCadastro.add(cadastra);
-				frameCadastro.add(cancelar);
-			}
-			private void addConfigTextField() {
-				name.setBounds(X, Y, WIDTH*4, HEIGHT);
-				partido.setBounds(X, Y*3,  WIDTH*4, HEIGHT);
-				pathImage.setBounds(X, Y*5,  WIDTH*4, HEIGHT);
-				numero.setBounds(X, Y*7,  WIDTH*2, HEIGHT);
-				numeroOld.setBounds(X,Y*9,WIDTH*2,HEIGHT);
-				numeroOld.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				frameCadastro.add(numeroOld);
-				frameCadastro.add(numero);
-				frameCadastro.add(pathImage);
-				frameCadastro.add(partido);
-				frameCadastro.add(name);
-				pathImage.addKeyListener(new KeyAdapter() {
-					public void keyReleased(KeyEvent e) {
-						if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-							path = pathImage.getText();
-							iconA = new ImageIcon(path);
-							addConfigImage();
-						}
-					}
-				});
-			}
-			private void addConfigLabel() {
-				nameL.setBounds(X, Y-20, WIDTH+20, HEIGHT);
-				partidoL.setBounds(X, Y*3-20, WIDTH*2+20, HEIGHT);
-				pathImageL.setBounds(X, Y*5-20, WIDTH*2+60, HEIGHT);
-				numeroL.setBounds(X, Y*7-20, WIDTH+40, HEIGHT);
-				numeroLOld.setBounds(X, Y*9-20, WIDTH+40, HEIGHT);
-				frameCadastro.add(numeroLOld);
-				frameCadastro.add(numeroL);
-				frameCadastro.add(pathImageL);
-				frameCadastro.add(partidoL);
-				frameCadastro.add(nameL);
-			}
-
-			private void addConfigImage() {
-				imagem.setBounds(280, 35, 170, 250);
-				imagem.setIcon(iconA);
-				frameCadastro.add(imagem);
-			}
-			public void delete(int numeroAux) {
-				db.deleteCandidato(numeroAux);
-			}
-		}
-		public class GuiDelete {
-//			public void getWindoClose() {
-//				frameCadastro.addWindowListener(new WindowAdapter() {
-//					public void windowClosing(WindowEvent e) {
-//						frameMenu.setVisible(true);
-//						}
-//				});
-//			}
-			public GuiDelete(){
-				DB db = new DB();
-				String numero;
-				numero= JOptionPane.showInputDialog("Informe o numero do candidato:");
-				if(numero != null) {
-					db.deleteCandidato(Integer.parseInt(numero));
+		public void getWindoClose() {
+			frameCadastro.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					frameMenu.setVisible(true);
 				}
-			}
+			});
+		}
+		private void addConfigButton() {
+			cadastra.setBounds(350,400,100,40);
+			cancelar.setBounds(35, 400, 100,40);
+			cadastra.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					if(name.getText().equals("")) {
+						name.grabFocus();
+					}
+					if(numero.getText().equals("")) {
+						numero.grabFocus();
+					}
+					if(pathImage.getText().equals("")) {
+						pathImage.grabFocus();
+					}
+					if(partido.getText().equals("")) {
+						partido.grabFocus();	
+					}else {
+						String nome = name.getText();
+						int num = Integer.parseInt(numero.getText());
+						String image = pathImage.getText();
+						String part = partido.getText();
+						db.add(num, nome, image, part);
+					}
+				}
+			});
+			cancelar.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					frameCadastro.dispose();
+					frameMenu.setVisible(true);
+				}
+			});
+			frameCadastro.add(cadastra);
+			frameCadastro.add(cancelar);
+		}
+		private void addConfigTextField() {
+			name.setBounds(X, Y, WIDTH*4, HEIGHT);
+			partido.setBounds(X, Y*3,  WIDTH*4, HEIGHT);
+			pathImage.setBounds(X, Y*5,  WIDTH*4, HEIGHT);
+			numero.setBounds(X, Y*7,  WIDTH, HEIGHT);
+			name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			frameCadastro.add(numero);
+			frameCadastro.add(pathImage);
+			frameCadastro.add(partido);
+			frameCadastro.add(name);
+			pathImage.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						path = pathImage.getText();
+						iconA = new ImageIcon(path);
+						addConfigImage();
+					}
+				}
+			});
+		}
+		private void addConfigLabel() {
+			nameL.setBounds(X, Y-20, WIDTH+20, HEIGHT);
+			partidoL.setBounds(X, Y*3-20, WIDTH+20, HEIGHT);
+			pathImageL.setBounds(X, Y*5-20, WIDTH*2+20, HEIGHT);
+			numeroL.setBounds(X, Y*7-20, WIDTH+20, HEIGHT);
+			frameCadastro.add(numeroL);
+			frameCadastro.add(pathImageL);
+			frameCadastro.add(partidoL);
+			frameCadastro.add(nameL);
 		}
 
+		private void addConfigImage() {
+			imagem.setBounds(280, 35, 170, 250);
+			imagem.setIcon(iconA);
+			frameCadastro.add(imagem);
+		}
 	}
+	public class GuiAlterar {
+		private final int X = 35;
+		private final int Y = 35;
+		private final int WIDTH = 50;
+		private final int HEIGHT = 20;
+		private JFrame frameCadastro;
+		private JButton cadastra = new JButton("Editar");
+		private JButton cancelar = new JButton("Cancelar");
+		private JTextField name = new JTextField();
+		private JTextField partido = new JTextField();
+		private JTextField pathImage = new JTextField();
+		private JTextField numero = new JTextField();
+		private JTextField numeroOld = new JTextField();
+		private JLabel nameL = new JLabel("Novo Nome");
+		private JLabel partidoL = new JLabel("Novo Partido");
+		private JLabel pathImageL = new JLabel("Novo Caminho de imagem");
+		private JLabel numeroL = new JLabel("Novo Numero");
+		private JLabel numeroLOld = new JLabel("Antigo Numero");
+		private JLabel imagem = new JLabel();
+		private DB db = new DB();
+		private String path;
+		private ImageIcon iconA;
+
+		public GuiAlterar() {
+			frameCadastro = new JFrame("Cadastro de candidato");
+			frameCadastro.setSize(500,500);
+			frameCadastro.setLocationRelativeTo(null);
+			frameCadastro.setLayout(null);
+			addConfigButton();
+			addConfigTextField();
+			addConfigLabel();
+			frameCadastro.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			frameCadastro.setVisible(true);
+		}
+		public void getWindoClose() {
+			frameCadastro.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					frameMenu.setVisible(true);
+				}
+			});
+		}
+		private void addConfigButton() {
+			cadastra.setBounds(350,400,100,40);
+			cancelar.setBounds(35, 400, 100,40);
+			cadastra.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					if(name.getText().equals("")) {
+						name.grabFocus();
+					}
+					if(numero.getText().equals("")) {
+						numero.grabFocus();
+					}
+					if(pathImage.getText().equals("")) {
+						pathImage.grabFocus();
+					}
+					if(partido.getText().equals("")) {
+						partido.grabFocus();	
+					}
+					if(numeroOld.getText().equals("")){
+						numeroOld.grabFocus();
+					}
+					else{
+						String nome = name.getText();
+						int num = Integer.parseInt(numero.getText());
+						String image = pathImage.getText();
+						String part = partido.getText();
+						int numOld = Integer.parseInt(numeroOld.getText());
+						db.editCandidato(numOld, num, nome, part, image);			
+					}
+				}
+			});
+			cancelar.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					frameCadastro.dispose();
+					frameMenu.setVisible(true);
+				}
+			});
+			frameCadastro.add(cadastra);
+			frameCadastro.add(cancelar);
+		}
+		private void addConfigTextField() {
+			name.setBounds(X, Y, WIDTH*4, HEIGHT);
+			partido.setBounds(X, Y*3,  WIDTH*4, HEIGHT);
+			pathImage.setBounds(X, Y*5,  WIDTH*4, HEIGHT);
+			numero.setBounds(X, Y*7,  WIDTH*2, HEIGHT);
+			numeroOld.setBounds(X,Y*9,WIDTH*2,HEIGHT);
+			numeroOld.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			frameCadastro.add(numeroOld);
+			frameCadastro.add(numero);
+			frameCadastro.add(pathImage);
+			frameCadastro.add(partido);
+			frameCadastro.add(name);
+			pathImage.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						path = pathImage.getText();
+						iconA = new ImageIcon(path);
+						addConfigImage();
+					}
+				}
+			});
+		}
+		private void addConfigLabel() {
+			nameL.setBounds(X, Y-20, WIDTH+20, HEIGHT);
+			partidoL.setBounds(X, Y*3-20, WIDTH*2+20, HEIGHT);
+			pathImageL.setBounds(X, Y*5-20, WIDTH*2+60, HEIGHT);
+			numeroL.setBounds(X, Y*7-20, WIDTH+40, HEIGHT);
+			numeroLOld.setBounds(X, Y*9-20, WIDTH+40, HEIGHT);
+			frameCadastro.add(numeroLOld);
+			frameCadastro.add(numeroL);
+			frameCadastro.add(pathImageL);
+			frameCadastro.add(partidoL);
+			frameCadastro.add(nameL);
+		}
+
+		private void addConfigImage() {
+			imagem.setBounds(280, 35, 170, 250);
+			imagem.setIcon(iconA);
+			frameCadastro.add(imagem);
+		}
+		public void delete(int numeroAux) {
+			db.deleteCandidato(numeroAux);
+		}
+	}
+	public class GuiDelete {
+		private JFrame frameDelete;
+		private JLabel numeroL = new JLabel("Informe o numero do candidato:");
+		private JTextField text = new JTextField();
+		private JButton confirma = new JButton("Confirma");
+		private JButton cancelar = new JButton("Cancelar");
+
+		public GuiDelete() {
+			frameDelete = new JFrame("Cadastro de candidato");
+			frameDelete.setSize(400,200);
+			frameDelete.setLocationRelativeTo(null);
+			frameDelete.setLayout(null);
+			addConfigButton();
+			addConfigText();
+			addConfigLabel();
+			frameDelete.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			frameDelete.setVisible(true);
+		}
+		public void getWindoClose() {
+			frameDelete.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					frameMenu.setVisible(true);
+				}
+			});
+		}
+		public void close() {
+			cancelar.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					frameDelete.dispose();
+					frameMenu.setVisible(true);
+				}
+			});
+		}
+		public void delete() {
+			confirma.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					db.deleteCandidato(Integer.parseInt(text.getText()));
+				}
+			});
+		} 
+		private void addConfigButton() {
+			confirma.setBounds(240, 120, 100, 30);
+			cancelar.setBounds(50, 120, 100, 30);
+			frameDelete.add(cancelar);
+			frameDelete.add(confirma);
+		}
+		private void addConfigText() {
+			text.setBounds(50, 50, 180, 20);
+			frameDelete.add(text);
+		}
+		private void addConfigLabel() {
+			numeroL.setBounds(50, 30, 200, 20);
+			frameDelete.add(numeroL);
+		}
+	}
+}

@@ -35,7 +35,7 @@ public class DB {
 			System.out.print("Falha ao cadastra candidato"+e.getMessage()+e.getErrorCode());
 		}
  	}
- 	public void fromVotosAlone() {
+ 	public void getVotosSolo() {
  		db();
         try {
         	resultSet = statement.executeQuery("SELECT num,votos FROM candidato");
@@ -47,7 +47,7 @@ public class DB {
 			System.out.print("Falha ao ler dados do Data base"+e.getMessage()+e.getErrorCode());
 		}
  	}
- 	public void fromVotosALL() {
+ 	public void getAllVotos() {
  		db();
         try {
         	resultSet = statement.executeQuery("SELECT sum(votos) FROM candidato");
@@ -56,7 +56,7 @@ public class DB {
 			System.out.print("Falha ao ler dados do Data base"+e.getMessage()+e.getErrorCode());
 		}
  	}
- 	public int fromVotosCandidato(int num)  {
+ 	public int getVotos(int num)  {
  		db();
  		try {
 			resultSet = statement.executeQuery("SELECT votos FROM candidato WHERE num="+num);
@@ -66,21 +66,14 @@ public class DB {
 		}
 		return 0;
  	}
- 	public int getVotos(int numero) {
- 		db();
- 		try {
- 			String getVotos =  "SELECT votos FROM candidato";
- 			return statement.executeUpdate(getVotos);
-		} catch (SQLException e) {
-		}
- 		return 0;
- 	}
- 	public void setVotos(int votos,int numero) {
+ 	public String setVotos(int votos,int numero) {
  		db();
  		try {
  			String update = "UPDATE candidato SET votos= "+votos+" WHERE num = "+numero;
  			statement.executeUpdate(update);
+ 			return "Confirmado";
 		} catch (SQLException e) {
+			return "Nulo";
 		}
  	}
  	public void editCandidato(int numeroOld, int numeroNew, String nameNew, String partidoNew, String pathImageNew) {
@@ -101,14 +94,32 @@ public class DB {
 			e.printStackTrace();
 		}
  	}
- 	public String fromCandidato(int num) {
+ 	public String getCandidatoPartido(int num) {
  		db();
  		try {
-			resultSet = statement.executeQuery("SELECT * FROM candidato WHERE num="+num);
-			//return resultSet.getString();
+			resultSet = statement.executeQuery("SELECT partido FROM candidato WHERE num="+num);
+			return resultSet.getString("partido");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return "";
 		}
- 		return "";
  	}
+	public String getCandidatoNome(int num) {
+ 		db();
+ 		try {
+			resultSet = statement.executeQuery("SELECT nome FROM candidato WHERE num="+num);
+			return resultSet.getString("nome");
+		} catch (SQLException e) {
+			return "";
+		}
+ 	}
+	public String getCandidatoImage(int num) {
+ 		db();
+ 		try {
+			resultSet = statement.executeQuery("SELECT image FROM candidato WHERE num="+num);
+			return resultSet.getString("image");
+		} catch (SQLException e) {
+			return "";
+		}
+ 	}
+	
 }
