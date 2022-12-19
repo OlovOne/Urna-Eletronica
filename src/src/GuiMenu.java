@@ -85,7 +85,7 @@ public class GuiMenu {
 		private File biriri = new File("src\\src\\biririri.mp3");
 		private File pi = new File("src\\src\\Pi.mp3");
 		private ImageIcon iconLogo = new ImageIcon("src\\src\\Logo.png");
-		private ImageIcon iconA = new ImageIcon("src\\src\\jungkook.jpg");
+		private ImageIcon iconImage;
 		private final int TAMANHO = 40;
 		private final int X_COLUNA1 =  500;
 		private final int X_COLUNA2 =  560;
@@ -108,6 +108,8 @@ public class GuiMenu {
 		private JButton confirma = new JButton("Confirma");
 		private JLabel label = new JLabel();
 		private JLabel logo = new JLabel();
+		private JLabel nameL = new JLabel();
+		private JLabel partidoL = new JLabel();
 		private JTextField numero = new JTextField();
 		private JTextField numero1 = new JTextField();
 		private JTextField numero2 = new JTextField();
@@ -206,11 +208,15 @@ public class GuiMenu {
 			zero.setForeground(Color.WHITE);
 		}
 		public void addConfigLabel() {
-			label.setBounds(25,50,300,300);
-			label.setIcon(iconA);
+			nameL.setBounds(250, 140, 100, 30);
+			label.setBounds(25,80,210,250);
+			partidoL.setBounds(250,180,100,30);
 			logo.setLocation(X_COLUNA1-45, 0);
+			label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			logo.setSize(300,75);
 			logo.setIcon(iconLogo);
+			frame.add(partidoL);
+			frame.add(nameL);
 			frame.add(logo);
 			frame.add(label);
 		}
@@ -234,59 +240,69 @@ public class GuiMenu {
 			um.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					buttonClicked("1");
+					mostraCandidato(getNumber());
 				}
 			});
 			dois.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					buttonClicked("2");
+					mostraCandidato(getNumber());
 				}
 			});
 			tres.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("3");
+					mostraCandidato(getNumber());
 				}
 			});
 			quatro.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("4");
+					mostraCandidato(getNumber());
 				}
 			});
 			cinco.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("5");
+					mostraCandidato(getNumber());
 				}
 			});
 			seis.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("6");
+					mostraCandidato(getNumber());
 				}
 			});
 			sete.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("7");
+					mostraCandidato(getNumber());
 				}
 			});
 			oito.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("8");
+					mostraCandidato(getNumber());
 				}
 			});
 			nove.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("9");
+					mostraCandidato(getNumber());
 				}
 			});
 			zero.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					piPlayer();
 					verificNull("0");
+					mostraCandidato(getNumber());
 				}
 			});
 			corrigir.addMouseListener(new MouseAdapter() {
@@ -311,7 +327,13 @@ public class GuiMenu {
 				}
 			});
 		}
-
+		public void mostraCandidato(int num) {
+			iconImage = new ImageIcon(db.getCandidatoImage(num));
+			label.setIcon(iconImage);
+			partidoL.setText(db.getCandidatoPartido(num));
+			System.out.print(db.getCandidatoNome(num));
+			nameL.setText(db.getCandidatoNome(num));
+		}
 		public void buttonClicked(String num) {
 			piPlayer();
 			verificNull(num);
@@ -389,14 +411,11 @@ public class GuiMenu {
 				public void mouseReleased(MouseEvent e) {
 					if(name.getText().equals("")) {
 						name.grabFocus();
-					}
-					if(numero.getText().equals("")) {
+					}else if(numero.getText().equals("")) {
 						numero.grabFocus();
-					}
-					if(pathImage.getText().equals("")) {
+					}else if(pathImage.getText().equals("")) {
 						pathImage.grabFocus();
-					}
-					if(partido.getText().equals("")) {
+					}else if(partido.getText().equals("")) {
 						partido.grabFocus();	
 					}else {
 						String nome = name.getText();
@@ -523,7 +542,8 @@ public class GuiMenu {
 						String image = pathImage.getText();
 						String part = partido.getText();
 						int numOld = Integer.parseInt(numeroOld.getText());
-						db.editCandidato(numOld, num, nome, part, image);			
+						db.editCandidato(numOld, num, nome, part, image);
+						GuiAviso aviso = new GuiAviso();
 					}
 				}
 			});
@@ -620,7 +640,15 @@ public class GuiMenu {
 		public void delete() {
 			confirma.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
-					db.deleteCandidato(Integer.parseInt(text.getText()));
+					System.out.print("Ola");
+					if(db.deleteCandidato(Integer.parseInt(text.getText())) == true) {
+						System.out.print("Ola");
+						GuiAviso aviso = new GuiAviso();
+					}else {
+						System.out.print("Ola");
+						GuiAviso aviso = new GuiAviso();
+					}
+					
 				}
 			});
 		} 
@@ -638,5 +666,29 @@ public class GuiMenu {
 			numeroL.setBounds(50, 30, 200, 20);
 			frameDelete.add(numeroL);
 		}
+	}
+	private class GuiAviso {
+		private JFrame frameAviso;
+		private JLabel texto = new JLabel("Cadastro");
+		private JLabel texto2 = new JLabel("Realizado");
+		private JButton ok = new JButton("Ok");
+		
+		public GuiAviso() {
+			frameAviso = new JFrame();
+			frameAviso.setSize(200,200);
+			frameAviso.setLocationRelativeTo(null);
+			frameAviso.setLayout(null);
+			addConfigs();
+			frameAviso.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			frameAviso.setVisible(true);
+		}
+		public void addConfigs() {
+			texto.setBounds(70,20,100,30);
+			texto2.setBounds(68, 40, 100, 30);
+			ok.setBounds(60, 80, 70, 30);
+			frameAviso.add(ok);
+			frameAviso.add(texto2);
+			frameAviso.add(texto);
+		}	
 	}
 }

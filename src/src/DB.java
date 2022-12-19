@@ -18,7 +18,7 @@ public class DB {
  		db();
  		try {
 			statement.execute("DROP TABLE IF EXISTS candidato");
-			statement.execute("CREATE TABLE candidato(num INT PRIMARY KEY,name TEXT NOT NULL,"
+			statement.execute("CREATE TABLE IF NOT EXISTS candidato(num INT PRIMARY KEY,name TEXT NOT NULL,"
 					+ "partido TEXT NOT NULL,image NOT NULL, votos INT DEFAULT '0');");
 		} catch (SQLException e) {
 			System.out.print("Falha ao criar tabela ao Data base"+e.getMessage()+e.getErrorCode());
@@ -29,7 +29,7 @@ public class DB {
  		try {
  			String insert = "INSERT INTO candidato(num,name,partido,image)"
  					+" VALUES "+"("+numero+","+"\'"+name+"\'"+","+"\'"
- 					+pathImage+"\'"+","+"\'"+partido+"\'"+")";
+ 					+partido+"\'"+","+"\'"+pathImage+"\'"+")";
  			statement.executeUpdate(insert);
 		} catch (SQLException e) {
 			System.out.print("Falha ao cadastra candidato"+e.getMessage()+e.getErrorCode());
@@ -39,7 +39,6 @@ public class DB {
  		db();
         try {
         	resultSet = statement.executeQuery("SELECT num,votos FROM candidato");
-			
 			while(resultSet.next()) {
 				
 			}
@@ -85,13 +84,14 @@ public class DB {
 		} catch (SQLException e) {
 		}
  	}
- 	public void deleteCandidato(int numero) {
+ 	public boolean deleteCandidato(int numero) {
  		db();
  		try {
  			String delete = "DELETE FROM candidato WHERE num="+numero;
 			statement.execute(delete);
+			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return false;
 		}
  	}
  	public String getCandidatoPartido(int num) {
@@ -106,10 +106,10 @@ public class DB {
 	public String getCandidatoNome(int num) {
  		db();
  		try {
-			resultSet = statement.executeQuery("SELECT nome FROM candidato WHERE num="+num);
-			return resultSet.getString("nome");
+			resultSet = statement.executeQuery("SELECT name FROM candidato WHERE num="+num);
+			return resultSet.getString("name");
 		} catch (SQLException e) {
-			return "";
+			return "2e1wq";
 		}
  	}
 	public String getCandidatoImage(int num) {
