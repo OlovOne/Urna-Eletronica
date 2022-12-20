@@ -24,7 +24,7 @@ public class DB {
 			System.out.print("Falha ao criar tabela ao Data base"+e.getMessage()+e.getErrorCode());
 		}
  	}
- 	public void add(int numero, String name,String pathImage, String partido) {
+ 	public boolean add(int numero, String name,String pathImage, String partido) {
  		db();
  		try {
  			String insert = "INSERT INTO candidato(num,name,partido,image)"
@@ -32,8 +32,9 @@ public class DB {
  					+partido+"\'"+","+"\'"+pathImage+"\'"+")";
  			statement.executeUpdate(insert);
 		} catch (SQLException e) {
-			System.out.print("Falha ao cadastra candidato"+e.getMessage()+e.getErrorCode());
+			return false;
 		}
+ 		return true;
  	}
  	public void getVotosSolo() {
  		db();
@@ -75,51 +76,59 @@ public class DB {
 			return "Nulo";
 		}
  	}
- 	public void editCandidato(int numeroOld, int numeroNew, String nameNew, String partidoNew, String pathImageNew) {
+ 	public boolean editCandidato(int numeroOld, int numeroNew, String nameNew, String partidoNew, String pathImageNew) {
  		db();
  		try {
  			String update = "UPDATE candidato SET num ="+numeroNew+",nameNew ="+"\'"+nameNew+"\'"+",partidoNew ="
  					+"\'"+partidoNew+"\'"+",image = "+"\'"+pathImageNew+"\'"+" WHERE num = "+numeroOld;
  			statement.executeUpdate(update);
 		} catch (SQLException e) {
+			return false;
 		}
+ 		return true;
  	}
  	public boolean deleteCandidato(int numero) {
  		db();
  		try {
  			String delete = "DELETE FROM candidato WHERE num="+numero;
 			statement.execute(delete);
-			return true;
 		} catch (SQLException e) {
 			return false;
 		}
+ 		return true;
  	}
  	public String getCandidatoPartido(int num) {
  		db();
+ 		String auxR;
  		try {
 			resultSet = statement.executeQuery("SELECT partido FROM candidato WHERE num="+num);
-			return resultSet.getString("partido");
+			auxR = resultSet.getString("partido");
 		} catch (SQLException e) {
 			return "";
 		}
+ 		return auxR;
  	}
 	public String getCandidatoNome(int num) {
  		db();
+ 		String auxR;
  		try {
 			resultSet = statement.executeQuery("SELECT name FROM candidato WHERE num="+num);
-			return resultSet.getString("name");
+			auxR = resultSet.getString("name");
 		} catch (SQLException e) {
 			return "2e1wq";
 		}
+ 		return auxR;
  	}
 	public String getCandidatoImage(int num) {
  		db();
+ 		String auxR;
  		try {
 			resultSet = statement.executeQuery("SELECT image FROM candidato WHERE num="+num);
-			return resultSet.getString("image");
+			auxR = resultSet.getString("image");
 		} catch (SQLException e) {
 			return "";
 		}
+ 		return auxR;
  	}
 	
 }

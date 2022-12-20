@@ -212,7 +212,6 @@ public class GuiMenu {
 			label.setBounds(25,80,210,250);
 			partidoL.setBounds(250,180,100,30);
 			logo.setLocation(X_COLUNA1-45, 0);
-			label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			logo.setSize(300,75);
 			logo.setIcon(iconLogo);
 			frame.add(partidoL);
@@ -422,7 +421,11 @@ public class GuiMenu {
 						int num = Integer.parseInt(numero.getText());
 						String image = pathImage.getText();
 						String part = partido.getText();
-						db.add(num, nome, image, part);
+						if(db.add(num, nome, image, part) == true) {
+							GuiAviso aviso = new GuiAviso("Cadastro realizado");
+						}else {
+							GuiAviso aviso = new GuiAviso("Erro ao cadastrar");
+						}
 					}
 				}
 			});
@@ -542,8 +545,11 @@ public class GuiMenu {
 						String image = pathImage.getText();
 						String part = partido.getText();
 						int numOld = Integer.parseInt(numeroOld.getText());
-						db.editCandidato(numOld, num, nome, part, image);
-						GuiAviso aviso = new GuiAviso();
+						if(db.editCandidato(numOld, num, nome, part, image) == true) {
+							GuiAviso aviso = new GuiAviso("Edição realizado");
+						}else {
+							GuiAviso aviso = new GuiAviso("Erro ao editar");
+						}
 					}
 				}
 			});
@@ -619,6 +625,8 @@ public class GuiMenu {
 			addConfigButton();
 			addConfigText();
 			addConfigLabel();
+			delete();
+			close();
 			frameDelete.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			frameDelete.setVisible(true);
 		}
@@ -640,15 +648,15 @@ public class GuiMenu {
 		public void delete() {
 			confirma.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
-					System.out.print("Ola");
-					if(db.deleteCandidato(Integer.parseInt(text.getText())) == true) {
-						System.out.print("Ola");
-						GuiAviso aviso = new GuiAviso();
+					if(text.getText().equals("")) {
+						text.grabFocus();
 					}else {
-						System.out.print("Ola");
-						GuiAviso aviso = new GuiAviso();
+						if(db.deleteCandidato(Integer.parseInt(text.getText())) == true) {
+							GuiAviso aviso = new GuiAviso("Eleminação realizado");
+						}else {
+							GuiAviso aviso = new GuiAviso("Erro ao deletar");
+						}
 					}
-					
 				}
 			});
 		} 
@@ -667,28 +675,26 @@ public class GuiMenu {
 			frameDelete.add(numeroL);
 		}
 	}
-	private class GuiAviso {
+	private  class GuiAviso {
 		private JFrame frameAviso;
-		private JLabel texto = new JLabel("Cadastro");
-		private JLabel texto2 = new JLabel("Realizado");
+		private JLabel texto = new JLabel();
 		private JButton ok = new JButton("Ok");
-		
-		public GuiAviso() {
+
+		public GuiAviso(String aviso) {
 			frameAviso = new JFrame();
-			frameAviso.setSize(200,200);
+			frameAviso.setSize(300,200);
 			frameAviso.setLocationRelativeTo(null);
 			frameAviso.setLayout(null);
-			addConfigs();
+			addConfigs(aviso);
 			frameAviso.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			frameAviso.setVisible(true);
 		}
-		public void addConfigs() {
-			texto.setBounds(70,20,100,30);
-			texto2.setBounds(68, 40, 100, 30);
+		public void addConfigs(String aviso) {
+			texto.setBounds(70,20,200,30);
 			ok.setBounds(60, 80, 70, 30);
+			texto.setText(aviso);
 			frameAviso.add(ok);
-			frameAviso.add(texto2);
 			frameAviso.add(texto);
-		}	
+		}
 	}
 }
