@@ -17,7 +17,7 @@ public class DB {
  	public void creatTable() {
  		db();
  		try {
-			statement.execute("DROP TABLE IF EXISTS candidato");
+			//statement.execute("DROP TABLE IF EXISTS candidato");
 			statement.execute("CREATE TABLE IF NOT EXISTS candidato(num INT PRIMARY KEY,name TEXT NOT NULL,"
 					+ "partido TEXT NOT NULL,image NOT NULL, votos INT DEFAULT '0');");
 		} catch (SQLException e) {

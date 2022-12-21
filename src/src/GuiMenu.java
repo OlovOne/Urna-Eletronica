@@ -1,20 +1,28 @@
 package src;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jaco.mp3.player.MP3Player;
 
@@ -328,7 +336,7 @@ public class GuiMenu {
 		}
 		public void mostraCandidato(int num) {
 			iconImage = new ImageIcon(db.getCandidatoImage(num));
-			label.setIcon(iconImage);
+			label.setIcon(new ImageIcon(iconImage.getImage().getScaledInstance(label.getWidth(), label.getHeight(), 100)));
 			partidoL.setText(db.getCandidatoPartido(num));
 			System.out.print(db.getCandidatoNome(num));
 			nameL.setText(db.getCandidatoNome(num));
@@ -369,9 +377,13 @@ public class GuiMenu {
 		private final int Y = 35;
 		private final int WIDTH = 50;
 		private final int HEIGHT = 20;
+		private JFileChooser chooser = new JFileChooser();
+		private  FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg & png & jpeg","jpg", "jpeg","png");
 		private JFrame frameCadastro;
+		private ImageIcon iconChooser = new ImageIcon("src\\src\\filechooser.png");
 		private JButton cadastra = new JButton("Cadastra");
 		private JButton cancelar = new JButton("Cancelar");
+		private JButton fileChooser = new JButton();
 		private JTextField name = new JTextField();
 		private JTextField partido = new JTextField();
 		private JTextField pathImage = new JTextField();
@@ -406,6 +418,39 @@ public class GuiMenu {
 		private void addConfigButton() {
 			cadastra.setBounds(350,400,100,40);
 			cancelar.setBounds(35, 400, 100,40);
+			fileChooser.setBounds(X+210, Y*5, WIDTH-30, HEIGHT);
+			fileChooser.setIcon(new ImageIcon(iconChooser.getImage().getScaledInstance(fileChooser.getWidth(), fileChooser.getHeight(), 100)));
+			frameCadastro.add(fileChooser);
+			frameCadastro.add(cadastra);
+			frameCadastro.add(cancelar);
+			listenerCancelar();
+			listenerCadastro();
+			listenerFileChooser();
+		}
+		private void listenerFileChooser() {
+			fileChooser.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					chooser.setFileFilter(filter);
+					int retorno = chooser.showDialog(null,"Select");
+					if(retorno == JFileChooser.APPROVE_OPTION) {
+						File image = chooser.getSelectedFile();
+						pathImage.setText(image.getPath());
+					}
+				}
+			});
+		}
+		private void listenerCancelar() {
+			cancelar.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					frameCadastro.dispose();
+					frameMenu.setVisible(true);
+				}
+			});
+			frameCadastro.add(fileChooser);
+			frameCadastro.add(cadastra);
+			frameCadastro.add(cancelar);
+		}
+		private void listenerCadastro() {
 			cadastra.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					if(name.getText().equals("")) {
@@ -429,14 +474,6 @@ public class GuiMenu {
 					}
 				}
 			});
-			cancelar.addMouseListener(new MouseAdapter() {
-				public void mouseReleased(MouseEvent e) {
-					frameCadastro.dispose();
-					frameMenu.setVisible(true);
-				}
-			});
-			frameCadastro.add(cadastra);
-			frameCadastro.add(cancelar);
 		}
 		private void addConfigTextField() {
 			name.setBounds(X, Y, WIDTH*4, HEIGHT);
@@ -483,7 +520,11 @@ public class GuiMenu {
 		private final int Y = 35;
 		private final int WIDTH = 50;
 		private final int HEIGHT = 20;
-		private JFrame frameCadastro;
+		private JFrame frameEditar;
+		private JFileChooser chooser = new JFileChooser();
+		private  FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg & png & jpeg","jpg", "jpeg","png");
+		private ImageIcon iconChooser = new ImageIcon("src\\src\\filechooser.png");
+		private JButton fileChooser = new JButton();
 		private JButton cadastra = new JButton("Editar");
 		private JButton cancelar = new JButton("Cancelar");
 		private JTextField name = new JTextField();
@@ -502,18 +543,18 @@ public class GuiMenu {
 		private ImageIcon iconA;
 
 		public GuiAlterar() {
-			frameCadastro = new JFrame("Cadastro de candidato");
-			frameCadastro.setSize(500,500);
-			frameCadastro.setLocationRelativeTo(null);
-			frameCadastro.setLayout(null);
+			frameEditar = new JFrame("Cadastro de candidato");
+			frameEditar.setSize(500,500);
+			frameEditar.setLocationRelativeTo(null);
+			frameEditar.setLayout(null);
 			addConfigButton();
 			addConfigTextField();
 			addConfigLabel();
-			frameCadastro.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			frameCadastro.setVisible(true);
+			frameEditar.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			frameEditar.setVisible(true);
 		}
 		public void getWindoClose() {
-			frameCadastro.addWindowListener(new WindowAdapter() {
+			frameEditar.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
 					frameMenu.setVisible(true);
 				}
@@ -522,6 +563,38 @@ public class GuiMenu {
 		private void addConfigButton() {
 			cadastra.setBounds(350,400,100,40);
 			cancelar.setBounds(35, 400, 100,40);
+			fileChooser.setBounds(X+210, Y*5, WIDTH-30, HEIGHT);
+			fileChooser.setIcon(new ImageIcon(iconChooser.getImage().getScaledInstance(fileChooser.getWidth(), fileChooser.getHeight(), 100)));
+			frameEditar.add(fileChooser);
+			frameEditar.add(cadastra);
+			frameEditar.add(cancelar);
+			listenerCancelar();
+			listenerCadastro();
+			listenerFileChooser();
+			frameEditar.add(cadastra);
+			frameEditar.add(cancelar);
+		}
+		private void listenerFileChooser() {
+			fileChooser.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					chooser.setFileFilter(filter);
+					int retorno = chooser.showDialog(null,"Select");
+					if(retorno == JFileChooser.APPROVE_OPTION) {
+						File image = chooser.getSelectedFile();
+						pathImage.setText(image.getPath());
+					}
+				}
+			});
+		}
+		private void listenerCancelar() {
+			cancelar.addMouseListener(new MouseAdapter() {
+				public void mouseReleased(MouseEvent e) {
+					frameEditar.dispose();
+					frameMenu.setVisible(true);
+				}
+			});
+		}
+		private void listenerCadastro() {
 			cadastra.addMouseListener(new MouseAdapter() {
 				public void mouseReleased(MouseEvent e) {
 					if(name.getText().equals("")) {
@@ -553,14 +626,6 @@ public class GuiMenu {
 					}
 				}
 			});
-			cancelar.addMouseListener(new MouseAdapter() {
-				public void mouseReleased(MouseEvent e) {
-					frameCadastro.dispose();
-					frameMenu.setVisible(true);
-				}
-			});
-			frameCadastro.add(cadastra);
-			frameCadastro.add(cancelar);
 		}
 		private void addConfigTextField() {
 			name.setBounds(X, Y, WIDTH*4, HEIGHT);
@@ -573,11 +638,11 @@ public class GuiMenu {
 			partido.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			pathImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			numero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-			frameCadastro.add(numeroOld);
-			frameCadastro.add(numero);
-			frameCadastro.add(pathImage);
-			frameCadastro.add(partido);
-			frameCadastro.add(name);
+			frameEditar.add(numeroOld);
+			frameEditar.add(numero);
+			frameEditar.add(pathImage);
+			frameEditar.add(partido);
+			frameEditar.add(name);
 			pathImage.addKeyListener(new KeyAdapter() {
 				public void keyReleased(KeyEvent e) {
 					if(e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -594,17 +659,17 @@ public class GuiMenu {
 			pathImageL.setBounds(X, Y*5-20, WIDTH*2+60, HEIGHT);
 			numeroL.setBounds(X, Y*7-20, WIDTH+40, HEIGHT);
 			numeroLOld.setBounds(X, Y*9-20, WIDTH+40, HEIGHT);
-			frameCadastro.add(numeroLOld);
-			frameCadastro.add(numeroL);
-			frameCadastro.add(pathImageL);
-			frameCadastro.add(partidoL);
-			frameCadastro.add(nameL);
+			frameEditar.add(numeroLOld);
+			frameEditar.add(numeroL);
+			frameEditar.add(pathImageL);
+			frameEditar.add(partidoL);
+			frameEditar.add(nameL);
 		}
 
 		private void addConfigImage() {
 			imagem.setBounds(280, 35, 170, 250);
 			imagem.setIcon(iconA);
-			frameCadastro.add(imagem);
+			frameEditar.add(imagem);
 		}
 		public void delete(int numeroAux) {
 			db.deleteCandidato(numeroAux);
